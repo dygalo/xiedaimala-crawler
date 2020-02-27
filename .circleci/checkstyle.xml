@@ -11,10 +11,11 @@
         <property name="fileExtensions" value="java,xml"/>
     </module>
     <module name="RegexpSingleline">
-        <!-- \s matches whitespace character, $ matches end of line. -->
         <property name="format" value="\s+$"/>
         <property name="message" value="Line has trailing spaces."/>
     </module>
+
+
     <module name="TreeWalker">
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>
