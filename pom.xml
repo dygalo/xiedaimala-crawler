@@ -38,6 +38,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.12.2</version>
@@ -113,13 +118,18 @@
                 <configuration>
                     <url>jdbc:h2:file:C:/Users/25224/Desktop/xiedaimala-crawler/target/xiedaimala-crawler</url>
                     <user>root</user>
-                    <psssword>root</psssword>
+                    <password>root</password>
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>
                         <version>1.4.199</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>annotations</artifactId>
+                        <version>3.0.1</version>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -1,6 +1,7 @@
 package com.github.hcsp;
 
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -10,19 +11,18 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.StringJoiner;
+
 import java.util.stream.Collectors;
 
 
 public class Main {
 
-
+    @SuppressFBWarnings("DMI_CONSTANT_DB_PASSWORD")
     public static void main(String[] args) throws IOException, SQLException {
         Connection connection = DriverManager.getConnection("jdbc:h2:file:C:/Users/25224/Desktop/xiedaimala-crawler/target/xiedaimala-crawler", "root", "root");
         String link;
@@ -39,7 +39,7 @@ public class Main {
         }
     }
 
-    private static void saveToNewsDatabase(String link, Connection connection, Document document) throws  SQLException {
+    private static void saveToNewsDatabase(String link, Connection connection, Document document) throws SQLException {
         ArrayList<Element> articles = document.select("article");
         if (!articles.isEmpty()) {
             for (Element article : articles) {
@@ -78,11 +78,16 @@ public class Main {
 
     private static boolean isProcessedLink(Connection connection, String link) throws SQLException {
         boolean flag = false;
+        ResultSet resultSet = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT  LINK FROM LINKED_ALREADY_PROCESSED where link = ?")) {
             preparedStatement.setString(1, link);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 flag = true;
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
             }
         }
         return flag;
@@ -130,13 +135,18 @@ public class Main {
     }
 
     private static String loadUrlsFromDatabase(Connection connection, String sql) throws SQLException {
+        ResultSet resultSet = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 return resultSet.getString(1);
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
             }
         }
         return null;
     }
-
 }
+
